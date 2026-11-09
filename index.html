@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FiiX — 웹페이지를 Figma 레이어로</title>
+<meta name="description" content="웹페이지를 주소만 넣으면 Figma 레이어로 바꿔 주는 무료 도구. Windows·Mac.">
+<link rel="icon" href="icon.png">
+<style>
+  :root { --brand: #0064ff; --brand-hover: #0050cc; --brand-soft: #e8f1ff; --ink: #191f28; --ink-2: #4e5968; --muted: #8b95a1; --line: #e5e8eb; --bg: #f4f6f8; --card: #fff; --code: #f2f4f6; --warn: #b86e00; --warn-soft: #fff6e0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --brand-soft: #14284a; --ink: #f2f4f6; --ink-2: #c3c9d1; --muted: #8b95a1; --line: #2c3340; --bg: #14181f; --card: #1c222b; --code: #262d38; --warn: #f0b95a; --warn-soft: #2e2512; }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.65 Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 20px 72px; }
+  .hero { text-align: center; }
+  .hero img { width: 80px; height: 80px; border-radius: 20px; box-shadow: 0 6px 20px rgba(0, 0, 0, .15); }
+  h1 { margin: 16px 0 6px; font-size: 34px; line-height: 1.2; letter-spacing: -.5px; }
+  .tag { margin: 0; font-size: 18px; color: var(--ink-2); }
+  .free { display: inline-block; margin-top: 12px; padding: 3px 12px; border-radius: 999px; background: var(--brand-soft); color: var(--brand); font-size: 14px; font-weight: 600; }
+
+  .dl { margin: 32px 0 0; padding: 28px 24px; text-align: center; border-radius: 20px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 4px 24px rgba(0, 0, 0, .05); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 420px; min-height: 64px; padding: 0 24px; border-radius: 14px; background: var(--brand); color: #fff; font: 700 20px/1.2 inherit; text-decoration: none; border: 0; cursor: pointer; }
+  .btn:hover { background: var(--brand-hover); }
+  .btn[aria-disabled="true"] { background: var(--line); color: var(--muted); pointer-events: none; }
+  .btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .meta { margin: 12px 0 0; color: var(--muted); font-size: 14px; min-height: 22px; }
+  .others { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; font-size: 14px; }
+  .others a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; }
+  .others a:hover { color: var(--brand); }
+  .note { margin: 14px 0 0; font-size: 14px; color: var(--warn); background: var(--warn-soft); padding: 10px 14px; border-radius: 10px; text-align: left; }
+
+  h2 { margin: 48px 0 16px; font-size: 22px; letter-spacing: -.3px; }
+  ol.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: 12px; }
+  ol.steps > li { counter-increment: s; position: relative; padding: 18px 18px 18px 64px; border-radius: 16px; background: var(--card); border: 1px solid var(--line); }
+  ol.steps > li::before { content: counter(s); position: absolute; left: 18px; top: 18px; width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 700; display: grid; place-items: center; }
+  ol.steps b { display: block; margin-bottom: 2px; font-size: 17px; }
+  ol.steps p { margin: 0; color: var(--ink-2); }
+  kbd, code { font: 600 14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; padding: 2px 7px; border-radius: 6px; background: var(--code); }
+  .menu { font-weight: 600; color: var(--ink); }
+
+  details { margin-top: 10px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
+  summary { padding: 16px 18px; cursor: pointer; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '＋'; color: var(--muted); font-weight: 400; }
+  details[open] summary::after { content: '－'; }
+  .body { padding: 0 18px 18px; color: var(--ink-2); }
+  .body ol { margin: 8px 0 0; padding-left: 22px; }
+  .body li { margin: 6px 0; }
+  .cmd { display: flex; gap: 8px; align-items: stretch; margin: 10px 0 4px; }
+  .cmd code { flex: 1; padding: 10px 12px; overflow-x: auto; white-space: nowrap; border-radius: 8px; }
+  .cmd button { flex: none; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: 600 14px/1 inherit; cursor: pointer; }
+  .cmd button:hover { border-color: var(--brand); color: var(--brand); }
+  .warnbox { margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: var(--warn-soft); color: var(--warn); font-size: 14px; }
+  footer { margin-top: 48px; text-align: center; color: var(--muted); font-size: 14px; }
+  footer a { color: inherit; }
+  .hidden { display: none !important; }
+  @media (max-width: 480px) { h1 { font-size: 28px; } .btn { font-size: 18px; } ol.steps > li { padding-left: 58px; } }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <img src="icon.png" alt="FiiX 아이콘" width="80" height="80">
+    <h1>FiiX</h1>
+    <p class="tag">웹페이지를 주소만 넣으면 Figma 레이어로</p>
+    <span class="free">무료</span>
+  </section>
+
+  <section class="dl" aria-live="polite">
+    <a id="dlBtn" class="btn" href="https://github.com/wq184502-dev/FiiX-download/releases/latest" aria-disabled="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+      <span id="dlText">최신 버전 확인 중…</span>
+    </a>
+    <p id="dlMeta" class="meta"></p>
+    <p id="mobileNote" class="note hidden">지금 보고 계신 기기에는 설치할 수 없어요. 이 링크를 <b>Windows나 Mac 컴퓨터</b>에서 열어 주세요.</p>
+    <div class="others" id="others"></div>
+  </section>
+
+  <h2>쓰는 순서</h2>
+  <ol class="steps">
+    <li><b>FiiX 앱 설치</b><p>위 버튼으로 받아서 설치하고 실행해요. 처음 열 때 경고가 뜨면 아래 <a href="#warn">"경고가 떠요"</a>를 보세요.</p></li>
+    <li><b>웹페이지 캡처</b><p>앱에 사이트 주소를 넣고 <span class="menu">캡처 시작</span>을 눌러요. 상세정보만 찍고 싶으면 <span class="menu">선택 캡처</span>를 쓰세요.</p></li>
+    <li><b>Figma 플러그인 등록 (딱 한 번)</b><p>앱 맨 아래 <span class="menu">플러그인</span> 글자를 누르면 폴더가 열려요. <b style="display:inline">Figma 데스크톱 앱</b>에서 <span class="menu">Plugins → Development → Import plugin from manifest…</span>를 누르고 그 폴더의 <code>manifest.json</code>을 골라요.</p></li>
+    <li><b>Figma로 가져오기</b><p>Figma에서 <span class="menu">Plugins → Development → FiiX</span>를 열고 목록에서 캡처를 골라 <span class="menu">가져오기</span>를 눌러요.</p></li>
+  </ol>
+
+  <h2 id="warn">설치할 때 경고가 떠요</h2>
+  <p style="margin:0;color:var(--ink-2)">FiiX는 아직 Apple·Microsoft 인증을 받지 않은 무료 앱이라 처음 한 번 경고가 떠요. 앱이 잘못된 게 아니에요. 아래대로 한 번만 허용하면 돼요.</p>
+
+  <details id="winHelp">
+    <summary>Windows — "Windows의 PC 보호" 창이 떠요</summary>
+    <div class="body"><ol>
+      <li>창에서 <b>추가 정보</b>를 눌러요.</li>
+      <li>나타나는 <b>실행</b> 버튼을 눌러요.</li>
+    </ol></div>
+  </details>
+
+  <details id="macHelp">
+    <summary>Mac — "'FiiX'을(를) 열지 않음" 창이 떠요</summary>
+    <div class="body">
+      <ol>
+        <li>먼저 <b>dmg를 열어 FiiX를 응용 프로그램 폴더로 끌어다 놓아요.</b> (외장 하드나 dmg 안에서 바로 열면 안 돼요)</li>
+        <li>FiiX를 열면 뜨는 창에서 <b>완료</b>를 눌러요. <b>휴지통으로 이동은 누르지 마세요.</b></li>
+        <li><b>시스템 설정 → 개인정보 보호 및 보안</b>으로 가서 아래로 내려요.</li>
+        <li><b>"FiiX"이(가) 차단되었습니다</b> 옆의 <b>그래도 열기</b>를 누르고 Mac 암호를 넣어요.</li>
+        <li>FiiX를 다시 열고 <b>열기</b>를 눌러요. 그다음부터는 그냥 열려요.</li>
+      </ol>
+      <p style="margin:14px 0 0"><b>위 방법이 안 되면</b> — 터미널 앱에 아래 한 줄을 붙여넣고 Enter를 누른 뒤 FiiX를 열어요.</p>
+      <div class="cmd"><code id="cmdText">xattr -dr com.apple.quarantine /Applications/FiiX.app</code><button type="button" id="copyBtn">복사</button></div>
+      <div class="warnbox">새 버전 dmg로 바꿔 끼울 때마다 한 번씩 다시 필요할 수 있어요. 또 압축 풀기 오류(513)는 외장 하드에 푸는 경우에 생기니, 꼭 Mac 안쪽 폴더(다운로드·데스크탑)에서 열어 주세요.</div>
+    </div>
+  </details>
+
+  <h2>자주 묻는 것</h2>
+  <details>
+    <summary>Figma 데스크톱 앱이 꼭 있어야 하나요?</summary>
+    <div class="body">네. 플러그인을 파일로 등록하는 기능은 Figma <b>데스크톱 앱</b>에서만 돼요. 웹 브라우저의 Figma에서는 등록할 수 없어요.</div>
+  </details>
+  <details>
+    <summary>새 버전은 어떻게 받나요?</summary>
+    <div class="body"><b>Windows 설치형</b>은 새 버전이 나오면 저절로 받아 두고 다음에 켤 때 바뀌어요. <b>Mac</b>은 앱 아래쪽에 "새 버전 있음"이 뜨면 이 페이지에서 새로 받아서 덮어쓰면 돼요. Figma 플러그인은 앱이 알아서 최신으로 맞춰 줘요(Figma에서 플러그인을 닫았다 다시 열면 돼요).</div>
+  </details>
+  <details>
+    <summary>로그인이 필요한 사이트도 되나요?</summary>
+    <div class="body">네. 앱의 <span class="menu">선택 캡처 → 창 열기</span>로 열린 창에서 직접 로그인하면 돼요. 로그인 정보는 내 컴퓨터의 FiiX 안에만 저장되고 어디로도 보내지 않아요.</div>
+  </details>
+  <details>
+    <summary>제 캡처가 어딘가로 전송되나요?</summary>
+    <div class="body">아니요. 캡처는 내 컴퓨터에 저장되고, 같은 컴퓨터의 Figma 플러그인만 읽어 가요(127.0.0.1에만 열려 있어 다른 기기에서는 접근할 수 없어요).</div>
+  </details>
+
+  <footer>
+    <p><a id="allLink" href="https://github.com/wq184502-dev/FiiX-download/releases">모든 버전 보기</a></p>
+  </footer>
+</main>
+
+<script>
+'use strict';
+(function () {
+  var REPO = 'wq184502-dev/FiiX-download';
+  var PREFIX = 'https://github.com/' + REPO + '/releases/download/';
+  var LATEST_PAGE = 'https://github.com/' + REPO + '/releases/latest';
+  var $ = function (id) { return document.getElementById(id); };
+
+  function detectOS() {
+    var ua = navigator.userAgent || '';
+    var plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+    if (/Android|iPhone|iPad|iPod/i.test(ua)) return 'mobile';
+    if (/Mac/i.test(plat) && navigator.maxTouchPoints > 1) return 'mobile'; // iPad 는 Mac 으로 보고함
+    if (/Win/i.test(plat) || /Windows/i.test(ua)) return 'win';
+    if (/Mac/i.test(plat) || /Macintosh/i.test(ua)) return 'mac';
+    return 'other';
+  }
+  var os = detectOS();
+  $('winHelp').open = os === 'win';
+  $('macHelp').open = os === 'mac';
+
+  function mb(n) { return n ? Math.round(n / 1048576) + 'MB' : ''; }
+  function link(text, href) {
+    var a = document.createElement('a');
+    a.textContent = text;
+    a.href = href;
+    return a;
+  }
+  function setPrimary(text, href, meta) {
+    $('dlText').textContent = text;
+    $('dlBtn').href = href;
+    $('dlBtn').removeAttribute('aria-disabled');
+    $('dlMeta').textContent = meta || '';
+  }
+
+  function render(rel) {
+    var by = { win: null, portable: null, mac: null, plugin: null };
+    (rel.assets || []).forEach(function (a) {
+      if (!a || typeof a.browser_download_url !== 'string' || a.browser_download_url.indexOf(PREFIX) !== 0) return; // 우리 릴리스 파일만
+      var n = String(a.name || '');
+      if (/^FiiX-Setup-.*\.exe$/.test(n)) by.win = a;
+      else if (/-portable\.exe$/.test(n)) by.portable = a;
+      else if (/-mac\.dmg$/.test(n)) by.mac = a;
+      else if (n === 'FiiX-figma-plugin.zip') by.plugin = a;
+    });
+    var ver = String(rel.tag_name || '').replace(/[^0-9A-Za-z.\-v]/g, '');
+    var date = rel.published_at ? new Date(rel.published_at).toLocaleDateString('ko-KR') : '';
+    var info = function (a) { return [ver, mb(a && a.size), date].filter(Boolean).join(' · '); };
+
+    var main = os === 'mac' ? by.mac : by.win;
+    if (os === 'mobile') {
+      $('mobileNote').classList.remove('hidden');
+      $('dlText').textContent = '컴퓨터에서 열어 주세요';
+      $('dlMeta').textContent = ver ? '최신 버전 ' + ver : '';
+    } else if (main) {
+      setPrimary(os === 'mac' ? 'Mac용 FiiX 받기' : 'Windows용 FiiX 받기', main.browser_download_url, info(main));
+    } else {
+      setPrimary('다운로드 페이지 열기', LATEST_PAGE, '');
+    }
+
+    var box = $('others');
+    box.textContent = '';
+    var add = function (text, a) { if (a) box.appendChild(link(text, a.browser_download_url)); };
+    if (os !== 'win') add('Windows용 받기', by.win);
+    if (os !== 'mac') add('Mac용 받기', by.mac);
+    add('Windows 설치 없이 쓰는 버전', by.portable);
+    add('Figma 플러그인만 받기 (zip)', by.plugin);
+  }
+
+  function fail() {
+    // GitHub 에 못 닿으면(오프라인·요청 제한) 다운로드 페이지로 안내
+    setPrimary('다운로드 페이지 열기', LATEST_PAGE, '');
+    if (os === 'mobile') {
+      $('mobileNote').classList.remove('hidden');
+      $('dlText').textContent = '컴퓨터에서 열어 주세요';
+    }
+  }
+
+  fetch('https://api.github.com/repos/' + REPO + '/releases/latest', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(render)
+    .catch(fail);
+
+  $('copyBtn').addEventListener('click', function () {
+    var text = $('cmdText').textContent;
+    var done = function () { $('copyBtn').textContent = '복사됨 ✓'; setTimeout(function () { $('copyBtn').textContent = '복사'; }, 1800); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () {});
+    else {
+      var r = document.createRange();
+      r.selectNodeContents($('cmdText'));
+      var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { document.execCommand('copy'); done(); } catch (e) { /* 직접 복사 */ }
+    }
+  });
+})();
+</script>
+</body>
+</html>
