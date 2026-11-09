@@ -141,7 +141,8 @@
 'use strict';
 (function () {
   var REPO = 'wq184502-dev/FiiX-download';
-  var PREFIX = 'https://github.com/' + REPO + '/releases/download/';
+  // 릴리스 파일 주소: 소유자는 고정, 저장소 이름은 바뀌어도(FiiX-download → 다른 이름) 되게 한다
+  var ASSET_URL = /^https:\/\/github\.com\/wq184502-dev\/[A-Za-z0-9._-]+\/releases\/download\//;
   var LATEST_PAGE = 'https://github.com/' + REPO + '/releases/latest';
   var $ = function (id) { return document.getElementById(id); };
 
@@ -175,7 +176,7 @@
   function render(rel) {
     var by = { win: null, portable: null, mac: null, plugin: null };
     (rel.assets || []).forEach(function (a) {
-      if (!a || typeof a.browser_download_url !== 'string' || a.browser_download_url.indexOf(PREFIX) !== 0) return; // 우리 릴리스 파일만
+      if (!a || typeof a.browser_download_url !== 'string' || !ASSET_URL.test(a.browser_download_url)) return; // 우리 릴리스 파일만
       var n = String(a.name || '');
       if (/^FiiX-Setup-.*\.exe$/.test(n)) by.win = a;
       else if (/-portable\.exe$/.test(n)) by.portable = a;
