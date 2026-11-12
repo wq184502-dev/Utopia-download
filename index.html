@@ -75,6 +75,7 @@
       <span id="dlText">최신 버전 확인 중…</span>
     </a>
     <p id="dlMeta" class="meta"></p>
+    <p id="macNote" class="note hidden">Mac은 <b>Apple 칩(M1 이상)</b> Mac에서만 돼요. 왼쪽 위 사과 메뉴 → <b>이 Mac에 관하여</b>에서 "칩"이 Apple M으로 시작하는지 확인하세요. Intel Mac은 <a id="intelLink" href="https://github.com/wq184502-dev/FiiX-download/releases/tag/v0.1.18">마지막 지원 버전(0.1.18)</a>을 쓰세요.</p>
     <p id="mobileNote" class="note hidden">지금 보고 계신 기기에는 설치할 수 없어요. 이 링크를 <b>Windows나 Mac 컴퓨터</b>에서 열어 주세요.</p>
     <div class="others" id="others"></div>
   </section>
@@ -124,6 +125,10 @@
     <div class="body"><b>Windows 설치형</b>은 새 버전이 나오면 저절로 받아 두고 다음에 켤 때 바뀌어요. <b>Mac</b>은 앱 아래쪽에 "새 버전 있음"이 뜨면 이 페이지에서 새로 받아서 덮어쓰면 돼요. Figma 플러그인은 앱이 알아서 최신으로 맞춰 줘요(Figma에서 플러그인을 닫았다 다시 열면 돼요).</div>
   </details>
   <details>
+    <summary>Intel Mac에서도 되나요?</summary>
+    <div class="body">아니요. 0.1.19부터 <b>Apple 칩(M1 이상) Mac 전용</b>이에요(파일 크기를 절반으로 줄이려고 Intel용을 뺐어요). Intel Mac은 <a href="https://github.com/wq184502-dev/FiiX-download/releases/tag/v0.1.18">0.1.18</a>까지 쓸 수 있어요. 0.1.18에서 "새 버전 있음"이 떠도 새 버전은 Intel Mac에서 열리지 않으니 받지 마세요.</div>
+  </details>
+  <details>
     <summary>로그인이 필요한 사이트도 되나요?</summary>
     <div class="body">네. 앱의 <span class="menu">선택 캡처 → 창 열기</span>로 열린 창에서 직접 로그인하면 돼요. 로그인 정보는 내 컴퓨터의 FiiX 안에만 저장되고 어디로도 보내지 않아요.</div>
   </details>
@@ -158,6 +163,7 @@
   var os = detectOS();
   $('winHelp').open = os === 'win';
   $('macHelp').open = os === 'mac';
+  if (os === 'mac') $('macNote').classList.remove('hidden');
 
   function mb(n) { return n ? Math.round(n / 1048576) + 'MB' : ''; }
   function link(text, href) {
